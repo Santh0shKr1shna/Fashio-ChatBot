@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 
 from langchain import LLMChain
 from langchain import PromptTemplate
@@ -10,7 +11,9 @@ from langchain.schema import (
 )
 from langchain.chat_models import ChatOpenAI
 
-os.environ["OPENAI_API_KEY"] = "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"
+load_dotenv()
+
+os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_API_KEY")
 chat = ChatOpenAI(temperature=0.9)  # model_name="text-davinci-003"
 
 
