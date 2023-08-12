@@ -10,7 +10,7 @@ from langchain.schema import (
 )
 from langchain.chat_models import ChatOpenAI
 
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = ""
 chat = ChatOpenAI(temperature=0.9)  # model_name="text-davinci-003"
 
 
