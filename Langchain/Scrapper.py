@@ -7,7 +7,7 @@ import urllib.parse
 class WebScrapper(object):
   articles = []
   
-  def scrape(self, query):
+  def scrape(self, query, no_of_items):
     product = {"q": query}
     product_url = urllib.parse.urlencode(product)
 
@@ -32,7 +32,7 @@ class WebScrapper(object):
       art['link_to_image'] = item.find('img', attrs={'class': '_2r_T1I'})["src"]
       self.articles.append(art)
       
-    return self.articles
+    return self.articles[:no_of_items] if no_of_items < len(self.articles) else self.articles
 
   def save_page(self, r):
     with open("index.html", "w", encoding="utf-8") as file:
