@@ -16,7 +16,6 @@ from langchain.schema import (
   HumanMessage,
   SystemMessage
 )
-from langchain import HuggingFaceHub
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 
@@ -65,7 +64,8 @@ class Chat(object):
     return l
 
   def conversation(self, query: str):
-    characteristics = ''
+    characteristics = self.db.load_convo()
+    
     prompt = ChatPromptTemplate(
       messages=[
         SystemMessagePromptTemplate.from_template(

@@ -33,6 +33,27 @@ class WebScrapper(object):
       self.articles.append(art)
       
     return self.articles[:no_of_items] if no_of_items < len(self.articles) else self.articles
+  
+  def scrape_wishlist (self):
+    url = "https://www.flipkart.com/wishlist?link=home_wishlist"
+    
+    r = requests.get(url)
+    
+    soup = BeautifulSoup(r.content, 'html5lib')
+
+    article_rows = soup.find('div', attrs={'class': '_3E8aIl sTQ7AV'})
+    wishlist = []
+    
+    for item in article_rows.findAll('div', attrs={'class': '_1M-Ete'}):
+      art = {}
+      art['brand'] = item.find('div', attrs={'class': '_2WkVRV'}).text
+      art['title'] = item.find('div', attrs={'class': '_3hscEA'}).text
+      art['link'] = "https://www.flipkart.com" + item.find('a', attrs={'class': 'IRpwTa'})["href"]
+      art['price'] = int(item.find('div', attrs={'class': '_30jeq3'}).text.strip('₹').replace(',', ''))
+      art['link_to_image'] = item.find('img', attrs={'class': '_396cs4'})["src"]
+      wishlist.append(art)
+
+
 
   def save_page(self, r):
     with open("index.html", "w", encoding="utf-8") as file:

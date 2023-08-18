@@ -35,6 +35,7 @@ class DataBase (object):
       
       self.user = uname
       print("User signed in")
+      
     else: return
   
   def signup(self) -> int:
@@ -87,6 +88,7 @@ class DataBase (object):
     return 1
     
 if __name__ == "__main__":
-  db = DataBase()
-  db.login()
-  print(db.save_convo('new test save'))
+  pass
+  # db = DataBase()
+  # db.login()
+  # print(db.save_convo('new test save'))
