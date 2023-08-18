@@ -1,43 +1,35 @@
 import os
 from dotenv import load_dotenv
 
-from langchain import LLMChain
-from langchain import PromptTemplate
-from langchain import OpenAI
-from langchain.schema import (
-  AIMessage,
-  HumanMessage,
-  SystemMessage
-)
-from langchain.chat_models import ChatOpenAI
+from langchain import HuggingFaceHub
+from langchain.llms import OpenAI
+from langchain import PromptTemplate, LLMChain
 
 load_dotenv()
 
-os.environ["OPENAI_API_KEY"] = os.getenv("OPEN_API_KEY")
-chat = ChatOpenAI(temperature=0.9)  # model_name="text-davinci-003"
+os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACE_API_TOKEN")
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
 
+# template = "List out the the clothing articles along with their attributes in the given statement: {question}"
 
-def feed (prompt):
-  sys_msg = """Let's suppose you are a fashion assistant. Generate some fashion recommendations after
-            reading through some of my characteristics. I am a 20 year old guy who loves to dress
-            subtle. My previous purchases are a pair of Nike Air Jordans, H&M plain t-shirts,
-            Baggy jeans. I love lighter colours like beige, cream, and sky blue. Now, answer relevantly
-            and straight to the point in less than 50 words """
-            
-  print("System Message: ", sys_msg)
-  print("Human Message: ", prompt)
-  
-  messages = [
-    SystemMessage(content="Let's suppose you are a fashion assistant. Generate some fashion recommendations after "
-                          "reading through some of my characteristics. I am a 20 year old guy who loves to dress "
-                          "subtle. My previous purchases are a pair of Nike Air Jordans, H&M plain t-shirts, "
-                          "Baggy jeans. I love lighter colours like beige, cream, and sky blue. Now, answer relevantly "
-                          "and straight to the point in less than 50 words"),
-    HumanMessage(content=prompt)
-  ]
-  
-  print("From chatgpt: ", chat(messages).content)
+template = "From the given statement carefully extract the clothing items with their specific details such as colour, design patterns or occasion and return them as " \
+           "comma separated text" \
+           "Statement: {question}"
 
-if __name__ == "__main__":
-  prompt = input("Enter prompt: ")
-  feed(prompt)
+prompt = PromptTemplate(template=template, input_variables=["question"])
+
+repo_id = "google/flan-t5-xxl"
+
+# llm = HuggingFaceHub(
+#     repo_id=repo_id, model_kwargs={"temperature": 0.5, "max_length": 64}
+# )
+
+llm = OpenAI(temperature=0.9)
+
+llm_chain = LLMChain(prompt=prompt, llm=llm)
+
+question = "A pair of tinted sunglasses, and a beige coloured trouser. Finish this outfit with an oversized blue coloured beachy shirt."
+
+res = llm_chain.run(question)
+print(question)
+print(res)
