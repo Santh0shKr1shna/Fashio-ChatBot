@@ -72,6 +72,10 @@ class DataBase (object):
     
     return res[0]
   
+  def printRandom(self, s):
+    print(s)
+    return
+  
   def save_convo (self, new_convo) -> int:
     if not self.user:
       return 0

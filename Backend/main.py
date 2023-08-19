@@ -5,6 +5,7 @@ import subprocess
 import os
 from pydantic import BaseModel
 import base64
+import Langchain.db as db
 from io import BytesIO
 from PIL import Image
 
@@ -22,6 +23,12 @@ class ImageData(BaseModel):
     image1: str
     image2: str
 
+
+@app.post('/login')
+def index():
+    database=db.DataBase()
+    database.printRandom("Is this working")
+    return {"message" : "works"}
 
 @app.get("/")
 def index():
