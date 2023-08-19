@@ -16,6 +16,8 @@ from langchain.schema import (
   HumanMessage,
   SystemMessage
 )
+from langchain.chains.conversation.memory import ConversationKGMemory, ConversationSummaryBufferMemory
+from langchain.chains import ConversationChain
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
 
@@ -24,8 +26,12 @@ load_dotenv()
 class Chat(object):
   chat = None
   openAI_llm = None
+  chars = None
+  KGconversation = None
   
-  def __init__(self):
+  def __init__(self, characteristics=""):
+    self.chars = characteristics
+    
     load_dotenv()
     os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACE_API_TOKEN")
@@ -62,18 +68,74 @@ class Chat(object):
     l = [i.strip().strip('.') for i in l]
     
     return l
+  
+  def convo_with_summarize(self):
+    template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
+               "carefully reading through my characteristics given below. Greet the user passively.\n" \
+               "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n" \
+               f"Background characteristics: {self.chars}\n" \
+               "Past chat history: {history}\n" \
+               "Now, answer relevantly and straight to the point in less than 50 words\n" \
+               "Conversation:\n" \
+               "Human: {input}\n" \
+               "AI:"
+    prompt = PromptTemplate(
+      input_variables=['history', 'input'], template=template
+    )
+    
+    memory = ConversationSummaryBufferMemory(
+      llm = self.openAI_llm,
+      max_toke_limit = 50
+    )
+    
+    convo_with_summary = ConversationChain(
+      llm=self.chat,
+      memory=memory,
+      prompt=prompt,
+      verbose=True
+    )
+    
+    return convo_with_summary
+  
+  def KGmemory(self, chars):
+    template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
+          "carefully reading through my characteristics given below. Greet the user passively.\n" \
+          "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n" \
+          f"Background characteristics: {chars}\n" \
+          "Past chat history: {history}\n" \
+          "Now, answer relevantly and straight to the point in less than 50 words\n" \
+          "Conversation:\n" \
+               "Human: {input}\n" \
+               "AI:"
+    prompt = PromptTemplate(
+      input_variables=['history', 'input'], template=template
+    )
+    
+    conversation = ConversationChain(
+      llm = self.chat,
+      verbose = True,
+      prompt = prompt,
+      memory = ConversationKGMemory(llm=self.openAI_llm)
+    )
 
-  def conversation(self, query: str):
-    characteristics = self.db.load_convo()
+    return conversation
+  
+  def KG_memory_conversation(self, query):
+    # if self.KGconversation is None:
+    #   self.KGmemory()
+      
+    return self.KGconversation.predict(input=query)
+    
+  def conversation(self, query: str, characteristics):
     
     prompt = ChatPromptTemplate(
       messages=[
         SystemMessagePromptTemplate.from_template(
-          "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after "
-          "carefully reading through my characteristics given below. Greet the user passively."
-          "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting"
-          f"Characteristics: {characteristics}"
-          "Now, answer relevantly and straight to the point in less than 50 words"
+          "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n"
+          "carefully reading through my characteristics given below. Greet the user passively.\n"
+          "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n"
+          f"Characteristics: {characteristics}\n"
+          "Now, answer the query relevantly and straight to the point in less than 50 words\n"
         ),
         MessagesPlaceholder(variable_name="chat_history"),
         HumanMessagePromptTemplate.from_template("{question}")
@@ -102,9 +164,11 @@ class Chat(object):
 
 
 if __name__ == "__main__":
-  pass
-  # ai_reply = conversation(input("Enter prompt: "))
-  # print(ai_reply)
-  # prods = extract_products(ai_reply)
-  # print(prods)
-  # fetch_results(prods)
+  chat = Chat(characteristics="""
+      Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
+      """)
+  conv = chat.convo_with_summarize()
+  
+  for _ in range(5):
+    res = conv.predict(input=input("Enter prompt: "))
+    print(res)

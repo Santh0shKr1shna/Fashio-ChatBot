@@ -43,4 +43,14 @@ class Bot(object):
     
 if __name__ == '__main__':
   bot = Bot()
-  bot.sign_up_summarizer()
+  
+  chars = bot.db.load_convo()
+  print(chars)
+  conversation = bot.chat.KGmemory(chars)
+  
+  done = True
+  while done:
+    res = conversation.predict(input = input("Enter prompt: "))
+    print(res)
+    if input("Want to continue(Y/N): ") == 'N':
+      done = False
