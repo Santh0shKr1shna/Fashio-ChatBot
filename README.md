@@ -10,8 +10,10 @@ A conversational chatbot built using GenAI to help with your fashion needs.
 ## Tech Stack
 
 ## Modules
-* **Chatbot using LLM**
-* **Trending sites scrapping**
-* **Virtual Try-On**
-
+### Chatbot using LLM
+*
+### Trending sites scrapping
+*
+### Virtual Try-On
+*
 
