@@ -13,7 +13,9 @@ A conversational chatbot built using GenAI to help with your fashion needs.
 ### Chatbot using LLM
 *
 ### Trending sites scrapping
-*
+
+This comprehensive Python-based fashion trend analysis system employs a series of libraries to collect data. Instaloader captures recent posts from fashion influencers on Instagram, while Pinscraper retrieves trending posts from Pinterest using fashion keywords. BeautifulSoup4 is utilized to scrape fashion images from prominent magazines' websites. Additionally, Pytrends taps into the Google Trends API to provide the chatbot with the top 5 trending fashion search queries, factoring in user location for a tailored experience.
+
 ### Virtual Try-On
 *
 
