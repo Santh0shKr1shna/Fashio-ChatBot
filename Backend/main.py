@@ -31,7 +31,7 @@ def index(uname, pwd):
     database=db.DataBase()
     try:
         check=database.login(uname, pwd)
-        if(check['message']):
+        if(check):
             return {"message": "Logged in successfully"}
         else:
             raise HTTPException(status_code=400, detail="Check details!")
