@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import './SignUp.css';
 import {Link} from "react-router-dom"
+import axios from 'axios'
 const Login = () => {
 
     const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("")
+    const [pass, setPass] = useState("");
+
+    const handleSubmit = async(req,res) => {
+        await axios.post("http://127.0.0.1:8000/login",
+        JSON.stringify({ email, pass }))
+        .then(res => { console.log(res) })
+    }
 
     return (
         <div className='loginbody'>
@@ -19,8 +26,11 @@ const Login = () => {
                         <label>Password</label>
                         <input type="password" placeholder="Enter Password" value={pass} onChange={(e) => setPass(e.target.value)} />
                     </div>
-                    
-                    <div className='signUpbutton'>Login</div>
+
+                    <div className='signUpbutton'
+                        onClick={(e) => handleSubmit(e)}>
+                        Login
+                    </div>
                 </div>
                 <div className='loginLink'>
                     New User? <Link to="/">Sign up here</Link>
