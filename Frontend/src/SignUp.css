@@ -9,7 +9,7 @@
 
 .logincontainer {
     position: relative;
-    max-width: 700px;
+    max-width: 420px;
     width: 100%;
     background: #fff;
     padding: 25px;
@@ -84,11 +84,11 @@
 }
 
 .form .gender {
-    column-gap: 5px;
+    column-gap: 1px;
 }
 
 .gender input {
-    accent-color: rgb(130, 106, 251);
+    accent-color: #8696FE;
 }
 
 .form :where(.gender input, .gender label) {
@@ -122,14 +122,15 @@
     border: none;
     cursor: pointer;
     transition: all 0.2s ease;
-    background: linear-gradient(#fa538d, #89379c);
+    background: linear-gradient(to right,#11009E, #8696FE);
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 10px;
 }
 
 .form .signUpbutton:hover {
-    background: linear-gradient(#fa538d, #89379c);
+    background: linear-gradient(to right,#11009E, #8696FE);
 }
 
 /*Responsive*/
@@ -193,6 +194,6 @@
 }
 a{
     text-decoration: none;
-    color: #fa538d;
-    border-bottom: 1px solid #fa538d;
+    color: #11009E;
+    border-bottom: 1px solid #11009E;
 }

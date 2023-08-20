@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './SignUp.css';
 import { Link } from "react-router-dom"
-import axios from 'axios';
+import axios from 'axios'
 const Signup = () => {
 
     const [name, setName] = useState("");
@@ -69,10 +69,6 @@ const Signup = () => {
         setLikes(tempLikes)
     }
 
-    const signUpCall= async()=>{
-        if(!name || !age || !email || !region)
-        await axios.post("http://127.0.0.1:8000/signup")
-    }
 
     return (
         <div className='loginbody'>
@@ -162,7 +158,7 @@ const Signup = () => {
                         <label>Password</label>
                         <input type="password" placeholder="Enter Password" value={pass} onChange={(e) => setPass(e.target.value)} />
                     </div>
-                    <div className='signUpbutton' onClick={signUpCall}>Sign Up</div>
+                    <div className='signUpbutton'>Sign Up</div>
                 </div>
 
                 <div className='loginLink'>

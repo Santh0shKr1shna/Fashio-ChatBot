@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Modal from './Modal';
 import { ThreeDots } from 'react-loader-spinner';
+import axios from 'axios'
 
 const Chat = () => {
 
@@ -74,11 +75,11 @@ const Chat = () => {
             ...chat,
             newMessage
         ]);
-        
+
 
     }
 
-    const getResponse = async(chatList) => {
+    const getResponse = async (chatList) => {
         let newMessage = {
             id: chatList.length + 1,
             user: "bot",
@@ -110,7 +111,7 @@ const Chat = () => {
 
         let newImage = {
             id: chat.length + 1,
-            user: "bot",
+            user: "me",
             type: "image",
             imageUrl: file
         }
@@ -118,7 +119,7 @@ const Chat = () => {
         if (caption !== "") {
             let newMessage = {
                 id: chat.length + 2,
-                user: "bot",
+                user: "me",
                 type: "text",
                 message: caption
             }
@@ -146,21 +147,52 @@ const Chat = () => {
                 onExitComplete={() => null}
             >
                 {
-                    showChat &&
                     <div className="container">
-                        <motion.button
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            whileHover={{ rotate: 360, scale: 1.1 }}
-                            className="chatbot-toggler" onClick={displayChatBot}>
-                            <span className="material-symbols-outlined">close</span>
-                        </motion.button>
 
                         <div className="chatbot">
                             <header>
                                 <h2>Chatbot</h2>
-                                {/* <span className="close-btn material-symbols-outlined">close</span> */}
                             </header>
+
+                            {
+                                !showChat &&
+                                <div className='get-started-container'>
+
+                                    <div className='separator-1'>
+                                        <div className='trending'>
+                                            <motion.div
+                                                className="get-started"
+                                                onClick={displayChatBot}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                            >
+                                                Trending right now!
+                                            </motion.div>
+                                        </div>
+                                        <div className='trending virtual-try-on-poster'>
+                                            <motion.div
+                                                className="get-started"
+                                                onClick={displayChatBot}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.9 }}
+                                            >
+                                                Try our new virtual try-on!
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                    <div className='separator-2'>
+                                        <motion.div
+                                            className="get-started"
+                                            onClick={displayChatBot}
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
+                                        >
+                                            Get Started
+                                        </motion.div>
+                                    </div>
+                                </div>
+                            }
+
 
                             {
                                 file !== null && <>
@@ -176,117 +208,135 @@ const Chat = () => {
                                     </div>
                                 </>
                             }
-                            <ul className="chatbox">
-                                {
-                                    chat.map((message) => {
-                                        if (message.user === "bot" && message.type === "text") {
-                                            return (
-                                                <motion.li
-                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
-                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
-                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
-                                                    transition={{ opacity: { duration: 0.2 } }}
-                                                    className="chat incoming" key={message.id}>
-                                                    <span className="chat-toy material-symbols-outlined">smart_toy</span>
-                                                    <p>{message.message}</p>
-                                                </motion.li>
-                                            )
-                                        }
-                                        else if (message.user === "bot" && message.type === "image") {
-                                            return (
-                                                <motion.li
-                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
-                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
-                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
-                                                    transition={{ opacity: { duration: 0.2 } }}
-                                                    className="chat incoming virtual" key={message.id}>
-                                                    <span className="chat-toy material-symbols-outlined">smart_toy</span>
-                                                    <img alt="fashion-img" src={message.imageUrl} className='chatImage' />
-                                                    <span className="virtual-try-on material-symbols-outlined"
-                                                        onClick={() => (modalOpen ? close(message.imageUrl) : open(message.imageUrl))}
-                                                    >photo_camera</span>
-                                                </motion.li>
-                                            )
-                                        }
-                                        else if (message.user === "me" && message.type === "image") {
-                                            return (
-                                                <motion.li
-                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
-                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
-                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
-                                                    transition={{ opacity: { duration: 0.2 } }}
-                                                    className="chat outgoing" key={message.id}>
-                                                    <img alt="fashion-img" src={message.imageUrl} className='chatImage' />
-                                                </motion.li>
-                                            )
-                                        }
-                                        return (
-                                            <motion.li
-                                                initial={{ opacity: 0, scale: 0.8, height: 0 }}
-                                                animate={{ opacity: 1, scale: 1, height: "auto" }}
-                                                exit={{ opacity: 1, scale: 0.8, height: 0 }}
-                                                transition={{ opacity: { duration: 0.2 } }}
-                                                className="chat outgoing" key={message.id}>
-                                                <p>{message.message}</p>
-                                            </motion.li>
-                                        )
-                                    })
-                                }
 
-                                {
-                                    loading &&
+                            {
+                                <>
+                                    <ul className="chatbox">
 
-                                    <motion.li
-                                        initial={{ opacity: 0, scale: 0.8, height: 0 }}
-                                        animate={{ opacity: 1, scale: 1, height: "auto" }}
-                                        exit={{ opacity: 1, scale: 0.8, height: 0 }}
-                                        transition={{ opacity: { duration: 0.2 } }}
-                                        className="chat incoming">
-                                        <span className="chat-toy material-symbols-outlined">smart_toy</span>
-                                        <div className="loading">
-                                            <ThreeDots
-                                                height="30"
-                                                width="30"
-                                                radius="9"
-                                                color="#724ae8"
-                                                ariaLabel="three-dots-loading"
-                                                wrapperStyle={{}}
-                                                wrapperClassName=""
-                                                visible={true}
-                                            />
-                                        </div>
-                                    </motion.li>
-                                }
+                                        {
+                                            showChat &&
+                                            <>
 
-                            </ul>
-                            <div className="chat-input">
-                                <textarea placeholder="Enter a message..." value={inputText} onChange={inputChange} />
-                                {
-                                    inputText !== "" ?
-                                        <span id="send-btn" className="material-symbols-outlined" onClick={addMessage}>send</span> :
+                                                {
+                                                    chat.map((message) => {
+                                                        if (message.user === "bot" && message.type === "text") {
+                                                            return (
+                                                                <motion.li
+                                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
+                                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
+                                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
+                                                                    transition={{ opacity: { duration: 0.2 } }}
+                                                                    className="chat incoming" key={message.id}>
+                                                                    <span className="chat-toy material-symbols-outlined">smart_toy</span>
+                                                                    <p>{message.message}</p>
+                                                                </motion.li>
+                                                            )
+                                                        }
+                                                        else if (message.user === "bot" && message.type === "image") {
+                                                            return (
+                                                                <motion.li
+                                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
+                                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
+                                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
+                                                                    transition={{ opacity: { duration: 0.2 } }}
+                                                                    className="chat incoming virtual" key={message.id}>
+                                                                    <span className="chat-toy material-symbols-outlined">smart_toy</span>
+                                                                    <img alt="fashion-img" src={message.imageUrl} className='chatImage' />
+                                                                    <span className="virtual-try-on material-symbols-outlined"
+                                                                        onClick={() => (modalOpen ? close(message.imageUrl) : open(message.imageUrl))}
+                                                                    >photo_camera</span>
+                                                                </motion.li>
+                                                            )
+                                                        }
+                                                        else if (message.user === "me" && message.type === "image") {
+                                                            return (
+                                                                <motion.li
+                                                                    initial={{ opacity: 0, scale: 0.8, height: 0 }}
+                                                                    animate={{ opacity: 1, scale: 1, height: "auto" }}
+                                                                    exit={{ opacity: 1, scale: 0.8, height: 0 }}
+                                                                    transition={{ opacity: { duration: 0.2 } }}
+                                                                    className="chat outgoing" key={message.id}>
+                                                                    <img alt="fashion-img" src={message.imageUrl} className='chatImage' />
+                                                                </motion.li>
+                                                            )
+                                                        }
+                                                        return (
+                                                            <motion.li
+                                                                initial={{ opacity: 0, scale: 0.8, height: 0 }}
+                                                                animate={{ opacity: 1, scale: 1, height: "auto" }}
+                                                                exit={{ opacity: 1, scale: 0.8, height: 0 }}
+                                                                transition={{ opacity: { duration: 0.2 } }}
+                                                                className="chat outgoing" key={message.id}>
+                                                                <p>{message.message}</p>
+                                                            </motion.li>
+                                                        )
+                                                    })
+                                                }
+
+                                                {
+                                                    loading &&
+
+                                                    <motion.li
+                                                        initial={{ opacity: 0, scale: 0.8, height: 0 }}
+                                                        animate={{ opacity: 1, scale: 1, height: "auto" }}
+                                                        exit={{ opacity: 1, scale: 0.8, height: 0 }}
+                                                        transition={{ opacity: { duration: 0.2 } }}
+                                                        className="chat incoming">
+                                                        <span className="chat-toy material-symbols-outlined">smart_toy</span>
+                                                        <div className="loading">
+                                                            <ThreeDots
+                                                                height="30"
+                                                                width="30"
+                                                                radius="9"
+                                                                color="#89379c"
+                                                                ariaLabel="three-dots-loading"
+                                                                wrapperStyle={{}}
+                                                                wrapperClassName=""
+                                                                visible={true}
+                                                            />
+                                                        </div>
+                                                    </motion.li>
+                                                }
+
+                                            </>
+                                        }
+
+
+                                    </ul>
+                                    {
+                                        showChat &&
                                         <>
-                                            <input type="file" id="file-upload" onChange={handleFileChange} />
-                                            <label htmlFor="file-upload">
-                                                <span id="send-btn" className="material-symbols-outlined">image</span>
-                                            </label>
+                                            <div className="chat-input">
+                                                <textarea placeholder="Enter a message..." value={inputText} onChange={inputChange} />
+                                                {
+                                                    inputText !== "" ?
+                                                        <span id="send-btn" className="material-symbols-outlined" onClick={addMessage}>send</span> :
+                                                        <>
+                                                            <input type="file" id="file-upload" onChange={handleFileChange} />
+                                                            <label htmlFor="file-upload">
+                                                                <span id="send-btn" className="material-symbols-outlined">image</span>
+                                                            </label>
+                                                        </>
+                                                }
+
+                                            </div>
                                         </>
-                                }
-                            </div>
+                                    }
+                                </>
+                            }
                         </div>
+
+                        <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            whileHover={{ rotate: 360, scale: 1.1 }}
+                            className="chatbot-toggler" onClick={displayChatBot}>
+                            <span className="material-symbols-outlined">close</span>
+                        </motion.button>
                     </div>
                 }
 
-                {
-                    !showChat &&
-                    <motion.div
-                        className="get-started"
-                        onClick={displayChatBot}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        Get Started
-                    </motion.div>
-                }
+                {/* */}
 
 
                 {modalOpen && imageUrl !== "" && <Modal modalOpen={modalOpen} imageUrl={imageUrl} handleClose={close} />}

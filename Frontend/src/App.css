@@ -8,6 +8,10 @@
   /* font-family: "Poppins", sans-serif; */
   font-family: 'Josefin Sans', sans-serif;
 }
+::-webkit-scrollbar{
+  width: 5px; 
+}
+
 body {
   background: #E3F2FD;
 }
@@ -15,51 +19,93 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 90vh;
+  min-height: 100vh;
+  /* border: 11px solid black; */
 }
 .container{
   display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  row-gap: 15px;
+  position: absolute;
+}
+.get-started-container{
+  width: 420px;
+  height:600px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.get-started-container .separator-1{
+  flex-grow: 2;
+  width: 100%;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.get-started-container .separator-2{
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.trending{
+  /* border: 1px solid black; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px;
+  width: 420px;
+  height: 150px;
+  background-attachment: fixed;
+  background-size: contain;
+  background-image: url('https://img.rawpixel.com/private/static/images/website/2022-05/upwk61843118-wikimedia-image-kowc5fl7.jpg?w=800&dpr=1&fit=default&crop=default&q=65&vib=3&con=3&usm=15&bg=F4F4F3&ixlib=js-2.2.1&s=fa1fe774ca2208773517b43dfd2b4f46');
+  /* opacity:0.5;     */
+}
+.virtual-try-on-poster{
+  justify-content: flex-start;
 }
 .get-started{
   cursor: pointer;
-  background-color: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   color: white;
   padding: 15px 20px;
   border-radius: 7px;
+  width: fit-content;  
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  /* position: relative; */
 }
 .chatbot {
-  position: fixed;
-  left: 37%;
-  top: 10%;
-  /* bottom: 90px; */
+  
   width: 420px;
   background: #fff;
   border-radius: 15px;
-  /* pointer-events: none; */
-  /* overflow: hidden; */
-  /* opacity: 0;
-  
-  transform: scale(0.5);
-  transform-origin: bottom right; */
   box-shadow: 0 0 128px 0 rgba(0,0,0,0.1),
               0 32px 64px -48px rgba(0,0,0,0.5);
   transition: all 0.1s ease;
+  
 }
-/* body.show-chatbot .chatbot {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-} */
 
 .chatbot header {
   padding: 16px 0;
   position: relative;
   text-align: center;
   color: #fff;
-  background: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   border-radius: 15px 15px 15px 0px;
-  z-index: 200;
+  z-index: 0;
 }
 .chatbot header span {
   position: absolute;
@@ -74,7 +120,7 @@ body {
 }
 .chatbot .chatbox {
   overflow-y: auto;
-  height: 510px;
+  height: 600px;
   padding: 30px 20px 100px;
   list-style: none;
   
@@ -82,10 +128,10 @@ body {
 /* modal popup */
 .overlay{
   width: 420px;
-  height: 525px;
+  height: 672px;
   background-color: #ddd;
   position: absolute;
-  top:40px;
+  top:45px;
   left:0;
   opacity: 0.5;
   z-index: 100;
@@ -106,7 +152,7 @@ body {
   max-width: 75%;
   color: #fff;
   font-size: 0.95rem;
-  background: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
 }
 
 .chatbox .incoming p {
@@ -130,7 +176,7 @@ body {
   text-align: center;
   line-height: 32px;
   align-self: flex-end;
-  background: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   border-radius: 4px;
   margin: 0 10px 7px 0;
 }
@@ -146,9 +192,8 @@ body {
 
 .chatbot .chat-input {
   display: flex;
+  /* position: relative; */
   gap: 5px;
-  position: absolute;
-  bottom: 0;
   width: 100%;
   background: #fff;
   padding: 3px 20px;
@@ -159,11 +204,10 @@ body {
 .chatbot .chat-input-img {
 
   position: absolute;
-  bottom: 15px;
+  bottom: 75px;
   width: 60%;
   margin-left: 15px;
   background: #fff;
-  /* padding: 3px 20px; */
   border: 1px solid #ddd;
   border-radius: 0px 0px 8px 8px;
   z-index: 1000;
@@ -196,7 +240,7 @@ body {
 }
 .chat-input-img span {
   align-self: flex-end;
-  color: #724ae8;
+  color: #11009E;
   cursor: pointer;
   height: 45px;
   display: flex;
@@ -218,7 +262,7 @@ body {
 }
 .chat-input span {
   align-self: flex-end;
-  color: #724ae8;
+  color: #11009E;
   cursor: pointer;
   height: 55px;
   display: flex;
@@ -239,9 +283,6 @@ body {
 }
 /* button toggler */
 .chatbot-toggler {
-  position: fixed;
-  bottom: 12%;
-  left: 49%;
   outline: none;
   border: none;
   height: 50px;
@@ -251,7 +292,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50% 0 50% 50%;
-  background: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   transition: all 0.2s ease;
 }
 
@@ -298,7 +339,7 @@ body {
   align-items: center;
   gap: 5px;
   justify-content: center;
-  color: #724ae8;
+  color: #11009E;
   margin-bottom: 70px;
   cursor: pointer;
 }
@@ -310,7 +351,7 @@ body {
   border-radius: 50%;
   color: white;
   cursor: pointer;
-  background-color: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   height: 40px;
   width: 40px;
   display: flex;
@@ -318,7 +359,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50% 0 50% 50%;
-  background: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   transition: all 0.2s ease;
 }
 .imageGallery{
@@ -348,7 +389,7 @@ body {
   align-items: center;
   justify-content: center;
   height: 170px;
-  color: #724ae8;
+  color: #11009E;
 }
 .imageGallery .add{
   font-weight: bolder;
@@ -365,12 +406,11 @@ body {
 }
 .chatImage .uploadImage .uploadImageBtn{
   cursor: pointer;
-  background-color: #724ae8;
+  background: linear-gradient(to right,#11009E, #8696FE);
   color: white;
   padding: 15px 20px; 
   border-radius: 7px;
 }
-
 
 
 

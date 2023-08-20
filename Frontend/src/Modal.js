@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Backdrop from "./Backdrop";
 import { useState } from "react";
+import axios from 'axios'
 
 const dropIn = {
     hidden: {
@@ -46,7 +47,13 @@ const Modal = ({ handleClose, imageUrl }) => {
     }
 
     const handleSubmit = () => {
-        console.log(imageUrl)
+        let person = file.replace("data:image/jpeg;base64,", "")
+        person = file.replace("data:image/png;base64,", "")
+        
+        let cloth = imageUrl.replace("data:image/jpeg;base64,", "")
+        cloth = imageUrl.replace("data:image/png;base64,", "")
+
+        console.log(file)
     }
 
 
