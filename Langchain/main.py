@@ -4,10 +4,24 @@ from Chat import Chat
 class Bot(object):
   db = DataBase()
   chat = Chat()
+  user = None
+  conversation = None
   
   def __init__(self):
-    self.db.login()
+    uname = ''
+    if self.db.login():
+      self.user = uname
+    
+  
+  def predict(self, query) -> str:
+    if not self.user:
+      return ''
+    
+    
+    
 
+  def signup(self):
+    pass
   """
    Fields required:
    -> Name

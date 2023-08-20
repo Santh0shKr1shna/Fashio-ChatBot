@@ -1,13 +1,25 @@
 from db import DataBase
 from Chat import Chat
 
+
 class Bot(object):
   db = DataBase()
   chat = Chat()
+  user = None
+  conversation = None
   
   def __init__(self):
-    self.db.login()
-
+    uname = ''
+    if self.db.login():
+      self.user = uname
+  
+  def predict(self, query) -> str:
+    if not self.user:
+      return ''
+  
+  def signup(self):
+    pass
+  
   """
    Fields required:
    -> Name
@@ -18,6 +30,7 @@ class Bot(object):
    -> Favourite fashion attires
    -> Scrape wishlist
   """
+  
   def get_user_details(self) -> str:
     return str(
       {
@@ -35,22 +48,24 @@ class Bot(object):
     
     details = self.get_user_details()
     print("LOG::Details text: ", details)
-
+    
     summarized_text = self.chat.summarize(details, 50)
     print("LOG::Summarized text: ", summarized_text)
-
-    self.db.save_convo(summarized_text)
     
+    self.db.save_convo(summarized_text)
+
+
 if __name__ == '__main__':
-  bot = Bot()
-  
-  chars = bot.db.load_convo()
-  print(chars)
-  conversation = bot.chat.KGmemory(chars)
-  
-  done = True
-  while done:
-    res = conversation.predict(input = input("Enter prompt: "))
-    print(res)
-    if input("Want to continue(Y/N): ") == 'N':
-      done = False
+  pass
+  # bot = Bot()
+  #
+  # chars = bot.db.load_convo()
+  # print(chars)
+  # conversation = bot.chat.KGmemory(chars)
+  #
+  # done = True
+  # while done:
+  #   res = conversation.predict(input=input("Enter prompt: "))
+  #   print(res)
+  #   if input("Want to continue(Y/N): ") == 'N':
+  #     done = False

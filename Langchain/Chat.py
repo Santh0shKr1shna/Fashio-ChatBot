@@ -69,6 +69,7 @@ class Chat(object):
     
     return l
   
+  # Currently using
   def convo_with_summarize(self):
     template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
                "carefully reading through my characteristics given below. Greet the user passively.\n" \
@@ -164,11 +165,12 @@ class Chat(object):
 
 
 if __name__ == "__main__":
-  chat = Chat(characteristics="""
-      Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
-      """)
-  conv = chat.convo_with_summarize()
-  
-  for _ in range(5):
-    res = conv.predict(input=input("Enter prompt: "))
-    print(res)
+  pass
+  # chat = Chat(characteristics="""
+  #     Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
+  #     """)
+  # conv = chat.convo_with_summarize()
+  #
+  # for _ in range(5):
+  #   res = conv.predict(input=input("Enter prompt: "))
+  #   print(res)

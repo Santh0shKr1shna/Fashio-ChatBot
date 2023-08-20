@@ -11,11 +11,12 @@ class DataBase (object):
     self.cur = self.con.cursor()
     print("LOG: Cursor set")
     
-  def login(self):
+  def login(self, uname = '', pwd = ''):
     if not self.user:
       # invoke login template
-      uname = input("Enter User name: ")
-      pwd = input("Enter password: ")
+      if uname == '':
+        uname = input("Enter User name: ")
+        pwd = input("Enter password: ")
   
       res = None
       try:
@@ -24,23 +25,25 @@ class DataBase (object):
       
       except sqlite3.Error as error:
         print("Error: ", error)
+        return 0
         
       if not res:
         print("Username does not exist! Please sign up")
-        return
+        return 0
       
       if pwd.strip() != res[0]:
         print("Password does not match! Retry")
-        return
+        return 0
       
       self.user = uname
       print("User signed in")
       
-    else: return
+    return 1
   
-  def signup(self) -> int:
-    uname = input("Enter User name: ")
-    pwd = input("Enter password: ")
+  def signup(self, uname = '', pwd = '') -> int:
+    if uname == '':
+      uname = input("Enter User name: ")
+      pwd = input("Enter password: ")
 
     try:
       self.cur.execute(f"INSERT INTO users VLAUES('{uname}', '{pwd}');")
@@ -53,6 +56,7 @@ class DataBase (object):
       print("LOG:: Error while signup: ", e)
       return 0
     
+    self.user = uname
     return 1
   
   def load_convo(self) -> str:

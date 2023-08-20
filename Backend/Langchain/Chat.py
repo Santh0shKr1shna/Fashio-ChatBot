@@ -23,6 +23,7 @@ from langchain.chat_models import ChatOpenAI
 
 load_dotenv()
 
+
 class Chat(object):
   chat = None
   openAI_llm = None
@@ -35,23 +36,22 @@ class Chat(object):
     load_dotenv()
     os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API_KEY")
     os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACE_API_TOKEN")
-
+    
     # llms init
     
     self.openAI_llm = OpenAI(temperature=0.9)
     
     # model_name="text-davinci-003"
     self.chat = ChatOpenAI(temperature=0.9)
-
   
-  def fetch_results (self, product_list: list):
+  def fetch_results(self, product_list: list):
     scrapper = WebScrapper()
     
     for item in product_list:
       l = scrapper.scrape(item, 3)
       print(item, ": ", l)
-
-  def extract_products (self, chat_reply: str):
+  
+  def extract_products(self, chat_reply: str):
     template = "From the given statement carefully extract the clothing items with their specific details such as colour, design patterns or occasion and return them as " \
                "comma separated text" \
                "Statement: {question}"
@@ -60,7 +60,7 @@ class Chat(object):
     
     llm_chain = LLMChain(prompt=prompt, llm=self.openAI_llm)
     
-    res = llm_chain.run(chat_reply) # return string
+    res = llm_chain.run(chat_reply)  # return string
     
     print("Result from llm: ", res)
     
@@ -69,6 +69,7 @@ class Chat(object):
     
     return l
   
+  # Currently using
   def convo_with_summarize(self):
     template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
                "carefully reading through my characteristics given below. Greet the user passively.\n" \
@@ -84,8 +85,8 @@ class Chat(object):
     )
     
     memory = ConversationSummaryBufferMemory(
-      llm = self.openAI_llm,
-      max_toke_limit = 50
+      llm=self.openAI_llm,
+      max_toke_limit=50
     )
     
     convo_with_summary = ConversationChain(
@@ -99,12 +100,12 @@ class Chat(object):
   
   def KGmemory(self, chars):
     template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
-          "carefully reading through my characteristics given below. Greet the user passively.\n" \
-          "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n" \
-          f"Background characteristics: {chars}\n" \
-          "Past chat history: {history}\n" \
-          "Now, answer relevantly and straight to the point in less than 50 words\n" \
-          "Conversation:\n" \
+               "carefully reading through my characteristics given below. Greet the user passively.\n" \
+               "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n" \
+               f"Background characteristics: {chars}\n" \
+               "Past chat history: {history}\n" \
+               "Now, answer relevantly and straight to the point in less than 50 words\n" \
+               "Conversation:\n" \
                "Human: {input}\n" \
                "AI:"
     prompt = PromptTemplate(
@@ -112,22 +113,21 @@ class Chat(object):
     )
     
     conversation = ConversationChain(
-      llm = self.chat,
-      verbose = True,
-      prompt = prompt,
-      memory = ConversationKGMemory(llm=self.openAI_llm)
+      llm=self.chat,
+      verbose=True,
+      prompt=prompt,
+      memory=ConversationKGMemory(llm=self.openAI_llm)
     )
-
+    
     return conversation
   
   def KG_memory_conversation(self, query):
     # if self.KGconversation is None:
     #   self.KGmemory()
-      
+    
     return self.KGconversation.predict(input=query)
-    
+  
   def conversation(self, query: str, characteristics):
-    
     prompt = ChatPromptTemplate(
       messages=[
         SystemMessagePromptTemplate.from_template(
@@ -164,11 +164,12 @@ class Chat(object):
 
 
 if __name__ == "__main__":
-  chat = Chat(characteristics="""
-      Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
-      """)
-  conv = chat.convo_with_summarize()
-  
-  for _ in range(5):
-    res = conv.predict(input=input("Enter prompt: "))
-    print(res)
+  pass
+  # chat = Chat(characteristics="""
+  #     Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
+  #     """)
+  # conv = chat.convo_with_summarize()
+  #
+  # for _ in range(5):
+  #   res = conv.predict(input=input("Enter prompt: "))
+  #   print(res)
