@@ -1,16 +1,22 @@
 import json
+import os
 
 import matplotlib.pyplot as plt
+import cv2
+from PIL import Image
+
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import cv2
-import subprocess
-import os
 from pydantic import BaseModel
+
+import subprocess
 import base64
-import Langchain.db as db
 from io import BytesIO
-from PIL import Image
+
+# Local imports
+import Langchain.db as db
+import Langchain.Chat as Chat
+import Langchain.Scrapper as scrapper
 
 #paths
 VTON_IMG_UPLOAD_DIR = "./Virtual_TON"
@@ -62,7 +68,15 @@ class SurveyData(BaseModel):
 
 
 database = db.DataBase()
+chat = Chat.Chat()
+scrapper = scrapper.WebScrapper()
+
 user = None
+chatBot = None
+
+def init_bot():
+    if not user: return
+    chatBot = chat.convo_with_summarize(database.load_convo())
 
 @app.post('/login')
 async def index(data: dict):
@@ -74,6 +88,8 @@ async def index(data: dict):
     try:
         check=database.login(uname, pwd)
         if(check):
+            user = uname
+            init_bot()
             return {"message": "Logged in successfully"}
         else:
             raise HTTPException(status_code=400, detail="Check details!")
@@ -105,16 +121,31 @@ def index(data: SurveyData):
     details['favourite_dress'] = data.favourite_dress
     
     try:
-        res = database.save_convo(str(details))
+        summarized_text = chat.summarize(str(details), 50)
+        res = database.save_convo(summarized_text)
         if not res:
             raise HTTPException(status_code=400, detail="Check details!")
-    except:
-        raise HTTPException(status_code=500, detail="Server error")
+    except Exception as e:
+        print(e)
+      
+    user = uname
+    init_bot()
     
-
-@app.get("/chat")
+@app.get("/predict")
 def predict(query: str):
-    return 0
+    if not user or not chatBot:
+        raise Exception("User not logged in or Chat bot not init")
+    
+    res = chatBot.predict(input=query)
+    print("AI response: ", res)
+    
+    response = {"message": res}
+    
+    products = chat.extract_products(res)
+    
+    for product in products:
+        scrapped_prods = scrapper.scrape(products, 1)
+    
 
 @app.post("/vton/")
 def generate(data: ImageData, request: Request):

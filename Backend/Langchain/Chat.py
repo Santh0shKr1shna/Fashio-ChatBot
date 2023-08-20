@@ -51,7 +51,7 @@ class Chat(object):
       l = scrapper.scrape(item, 3)
       print(item, ": ", l)
   
-  def extract_products(self, chat_reply: str):
+  def extract_products(self, chat_reply: str) -> list:
     template = "From the given statement carefully extract the clothing items with their specific details such as colour, design patterns or occasion and return them as " \
                "comma separated text" \
                "Statement: {question}"
@@ -70,11 +70,11 @@ class Chat(object):
     return l
   
   # Currently using
-  def convo_with_summarize(self):
+  def convo_with_summarize(self, chars):
     template = "Let's suppose you are my fashion assistant. Properly generate some fashion recommendations after \n" \
                "carefully reading through my characteristics given below. Greet the user passively.\n" \
                "Do not answer any questions that are not relevant to fashion in any manner unless it is casual chatting\n" \
-               f"Background characteristics: {self.chars}\n" \
+               f"Background characteristics: {chars}\n" \
                "Past chat history: {history}\n" \
                "Now, answer relevantly and straight to the point in less than 50 words\n" \
                "Conversation:\n" \
@@ -155,7 +155,7 @@ class Chat(object):
     print(res.get('text'))
     return res.get('text')
   
-  def summarize(self, text, token_limit):
+  def summarize(self, text, token_limit) -> str:
     summrzr = OpenAI()
     
     return summrzr(f"Summarize the following paragraph within {token_limit} tokens"
