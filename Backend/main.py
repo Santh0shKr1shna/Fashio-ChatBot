@@ -70,15 +70,15 @@ class SurveyData(BaseModel):
 
 
 database = db.DataBase()
-chat = Chat.Chat()
-scrapper = scrapper.WebScrapper()
+# chat = Chat.Chat()
+# scrapper = scrapper.WebScrapper()
 
-user = None
-chatBot = None
+# user = None
+# chatBot = None
 
-def init_bot():
-  if not user: return
-  chatBot = chat.convo_with_summarize(database.load_convo())
+# def init_bot():
+#   if not user: return
+#   chatBot = chat.convo_with_summarize(database.load_convo())
 
 @app.post('/login')
 async def index(data: dict):
@@ -91,7 +91,7 @@ async def index(data: dict):
     check=database.login(uname, pwd)
     if(check):
       user = uname
-      init_bot()
+    #   init_bot()
       return {"message": "Logged in successfully"}
     else:
       raise HTTPException(status_code=400, detail="Check details!")
@@ -133,54 +133,55 @@ def index(data: dict):
   details['favourite_colour'] = data.get('colors')
   details['favourite_dress'] = data.get('favourite_dress')
   
-  try:
-    summarized_text = chat.summarize(str(details), 50)
-    res = database.save_convo(summarized_text)
-    if not res:
-      raise HTTPException(status_code=400, detail="Check details!")
-  except Exception as e:
-    print(e)
+#   try:
+#     summarized_text = chat.summarize(str(details), 50)
+#     res = database.save_convo(summarized_text)
+#     if not res:
+#       raise HTTPException(status_code=400, detail="Check details!")
+#   except Exception as e:
+#     print(e)
   
   user = uname
-  init_bot()
+#   init_bot()
 
-@app.get("/predict")
-def predict(query: str):
-  if not user or not chatBot:
-    raise Exception("User not logged in or Chat bot not init")
-  
-  res = chatBot.predict(input=query)
-  print("AI response: ", res)
-  
-  response = {"message": res}
-  
-  products = chat.extract_products(res)
-  if len(products) == 0:
-    return response
-  
-  response['products'] = []   # list format: [article_name, link, path_to_img]
 
-  for product in products:
-    scrapped_prods = scrapper.scrape(product, 1)
-    art = []
-    for i,item in enumerate(scrapped_prods):
-      art.append(item.get('title'))
-      link = item.get('link')
-      art.append(link)
-      link_to_img = item.get('link_to_image')
-      brand = item.get('brand').replace(' ','')
+# @app.get("/predict")
+# def predict(query: str):
+#   if not user or not chatBot:
+#     raise Exception("User not logged in or Chat bot not init")
+  
+#   res = chatBot.predict(input=query)
+#   print("AI response: ", res)
+  
+#   response = {"message": res}
+  
+#   products = chat.extract_products(res)
+#   if len(products) == 0:
+#     return response
+  
+#   response['products'] = []   # list format: [article_name, link, path_to_img]
+
+#   for product in products:
+#     scrapped_prods = scrapper.scrape(product, 1)
+#     art = []
+#     for i,item in enumerate(scrapped_prods):
+#       art.append(item.get('title'))
+#       link = item.get('link')
+#       art.append(link)
+#       link_to_img = item.get('link_to_image')
+#       brand = item.get('brand').replace(' ','')
       
-      img = requests.get(link_to_img)
-      if img.status_code:
-        img_path = f"../images/{brand}_{i}"
-        fp = open(img_path, 'wb')
-        fp.write(img.content)
-        fp.close()
-        art.append(img_path)
+#       img = requests.get(link_to_img)
+#       if img.status_code:
+#         img_path = f"../images/{brand}_{i}"
+#         fp = open(img_path, 'wb')
+#         fp.write(img.content)
+#         fp.close()
+#         art.append(img_path)
         
-    response['products'].append(art)
+#     response['products'].append(art)
   
-  return response
+#   return response
 
 
 @app.post("/vton/")

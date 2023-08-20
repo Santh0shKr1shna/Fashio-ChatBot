@@ -1,11 +1,27 @@
 import { useState } from 'react';
 import './SignUp.css';
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import axios from 'axios'
 const Login = () => {
-
+    const navigate=useNavigate()
     const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("")
+    const [pass, setPass] = useState("");
+
+    const handleSubmit = async(req,res) => {
+        const data={
+            uname: email,
+            pwd: pass
+        }
+        await axios.post("http://127.0.0.1:8000/login", data)
+        .then(res => { 
+            console.log(res) 
+            localStorage.setItem('uname', email)
+            navigate('/chat')
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+    }
 
     return (
         <div className='loginbody'>
@@ -20,8 +36,11 @@ const Login = () => {
                         <label>Password</label>
                         <input type="password" placeholder="Enter Password" value={pass} onChange={(e) => setPass(e.target.value)} />
                     </div>
-                    
-                    <div className='signUpbutton'>Login</div>
+
+                    <div className='signUpbutton'
+                        onClick={(e) => handleSubmit(e)}>
+                        Login
+                    </div>
                 </div>
                 <div className='loginLink'>
                     New User? <Link to="/">Sign up here</Link>
