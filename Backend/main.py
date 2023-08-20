@@ -145,43 +145,52 @@ def index(data: dict):
 #   init_bot()
 
 
-# @app.get("/predict")
-# def predict(query: str):
-#   if not user or not chatBot:
-#     raise Exception("User not logged in or Chat bot not init")
+@app.post("/predict")
+def predict(data:dict):
+  # if not user or not chatBot:
+    # raise Exception("User not logged in or Chat bot not init")
   
-#   res = chatBot.predict(input=query)
-#   print("AI response: ", res)
+  # res = chatBot.predict(input=query)
+  # print("AI response: ", res)
+  res = "oombu "
+  response={}
+  response["products"]=[]
+  title="random_product"
+  link="https://www.istockphoto.com/photo/silent-forest-in-spring-with-beautiful-bright-sun-rays-gm1419410282-465774617"
+  imagelink="../test.jpeg"
+  finalImg="data:image/jpeg;base64, "
+  with open(imagelink, "rb") as f:
+    finalImg += base64.b64encode(f.read()).decode("utf-8")
+  response["products"].append([title, link, finalImg])
+  return response
   
-#   response = {"message": res}
+  # products = chat.extract_products(res)
+  # if len(products) == 0:
+  #   return response
   
-#   products = chat.extract_products(res)
-#   if len(products) == 0:
-#     return response
-  
-#   response['products'] = []   # list format: [article_name, link, path_to_img]
+  # response["products"] = []   # list format: [article_name, link, path_to_img]
 
-#   for product in products:
-#     scrapped_prods = scrapper.scrape(product, 1)
-#     art = []
-#     for i,item in enumerate(scrapped_prods):
-#       art.append(item.get('title'))
-#       link = item.get('link')
-#       art.append(link)
-#       link_to_img = item.get('link_to_image')
-#       brand = item.get('brand').replace(' ','')
+  # for product in products:
+  #   scrapped_prods = scrapper.scrape(product, 1)
+  #   art = []
+  #   for i,item in enumerate(scrapped_prods):
+  #     art.append(item.get('title'))
+  #     link = item.get('link')
+  #     art.append(link)
+  #     link_to_img = item.get('link_to_image')
+  #     brand = item.get('brand').replace(' ','')
       
-#       img = requests.get(link_to_img)
-#       if img.status_code:
-#         img_path = f"../images/{brand}_{i}"
-#         fp = open(img_path, 'wb')
-#         fp.write(img.content)
-#         fp.close()
-#         art.append(img_path)
+  #     img = requests.get(link_to_img)
+  #     if img.status_code:
+  #       img_path = f"../images/{brand}_{i}"
+  #       fp = open(img_path, 'wb')
+  #       fp.write(img.content)
+  #       fp.close()
+  #       art.append(img_path)
         
-#     response['products'].append(art)
+  #   response["products"].append(art)
   
-#   return response
+  # return response
 
 
 @app.post("/vton/")
