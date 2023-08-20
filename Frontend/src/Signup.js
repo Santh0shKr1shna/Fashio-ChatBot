@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './SignUp.css';
-import { Link } from "react-router-dom"
+import { Link , useNavigate} from "react-router-dom"
 import axios from 'axios';
 const Signup = () => {
-
+    const navigate=useNavigate();
     const [name, setName] = useState("");
     const [age, setAge] = useState("")
     const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ const Signup = () => {
     // eslint-disable-next-line 
     const [gender, setGender] = useState("")
 
-    const [pass, setPass] = useState("")
+    const [password, setPassword] = useState("")
 
     const genderChange = (e) => {
         setGender(e.target.value)
@@ -70,8 +70,30 @@ const Signup = () => {
     }
 
     const signUpCall= async()=>{
-        if(!name || !age || !email || !region)
-        await axios.post("http://127.0.0.1:8000/signup")
+        if(!name || !age || !email || !region || !email || !likesText ||
+        !disLikesText || !password || !attiresText || !favouriteColor || !gender){
+            alert("Enter all fields");
+            return;
+        }
+        const data={
+            name : name,
+            age : age,
+            gender: gender,
+            email: email,
+            pwd : password,
+            likes: likesText,
+            dislikes:disLikesText,
+            colors: favouriteColor,
+            favourite_dress: attiresText
+        }
+
+        await axios.post("http://127.0.0.1:8000/signup",data).then((res)=>{
+            console.log(res)
+            navigate('/login');
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
     }
 
     return (
@@ -160,7 +182,7 @@ const Signup = () => {
 
                     <div className="input-box">
                         <label>Password</label>
-                        <input type="password" placeholder="Enter Password" value={pass} onChange={(e) => setPass(e.target.value)} />
+                        <input type="password" placeholder="Enter Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
                     <div className='signUpbutton' onClick={signUpCall}>Sign Up</div>
                 </div>

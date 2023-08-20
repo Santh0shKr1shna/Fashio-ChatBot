@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import './SignUp.css';
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import axios from 'axios'
 const Login = () => {
-
+    const navigate=useNavigate()
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
 
@@ -16,6 +16,7 @@ const Login = () => {
         .then(res => { 
             console.log(res) 
             localStorage.setItem('uname', email)
+            navigate('/chat')
         })
         .catch(err=>{
             console.log(err)
