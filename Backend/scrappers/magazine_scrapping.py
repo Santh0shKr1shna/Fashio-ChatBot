@@ -2,14 +2,14 @@ from bs4 import *
 import requests
 import os
 from datetime import datetime,timedelta
+
 def folder_create(images,folder):
     directory = folder
     # Parent Directory path 
     parent_dir = "Insta Scrapping/media"
         
     # Path 
-    path = os.path.join(parent_dir, directory) 
-        
+    path = os.path.join(parent_dir, directory)
     
     try:
         print(folder)
@@ -113,6 +113,7 @@ def main(url,folder):
 
     # Call folder create function
     folder_create(images,folder)
+    
 def magazine_scrapper():
     women=["https://www.vogue.in/fashion/fashion-trends","https://www.elle.com/fashion/trend-reports/","https://www.cosmopolitan.com/style-beauty/fashion/" ]
     men=["https://www.gq.com/gq-recommends","https://www.esquire.com/style/"]
@@ -125,8 +126,6 @@ def magazine_scrapper():
     for i in women:
         print(i)
         main(i,folder)
-        
-        
 
 magazine_scrapper()
     

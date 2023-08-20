@@ -46,6 +46,19 @@ class DataBase(object):
       return 0
     return 1
 
+  def getGender(self):
+    try:
+      self.cur.execute(f"SELECT gender FROM users where username='{self.user}';")
+      res = self.cur.fetchone()
+      
+      if not res: return ''
+      
+      return res[0]
+
+    except sqlite3.Error as e:
+      print("Error while checking user: ", e)
+      return ''
+  
   def signup(self, uname, pwd) -> int:
     try:
       self.cur.execute(f"INSERT INTO users VALUES('{uname}', '{pwd}');")

@@ -18,6 +18,7 @@ from io import BytesIO
 import Langchain.db as db
 import Langchain.Chat as Chat
 import Langchain.Scrapper as scrapper
+# from  import GoogleTrends
 
 #paths
 VTON_IMG_UPLOAD_DIR = "./Virtual_TON"
@@ -144,6 +145,14 @@ def index(data: dict):
   user = uname
   init_bot()
 
+@app.post("/trending")
+def trending():
+  try:
+    gender = database.getGender()
+    
+  except Exception as e:
+    print(e)
+
 @app.get("/predict")
 def predict(query: str):
   if not user or not chatBot:
@@ -220,3 +229,15 @@ def generate(data: ImageData, request: Request):
     finalImg = base64.b64encode(f.read()).decode("utf-8")
   
   return {"image": finalImg}
+
+@app.post("/close")
+def close():
+  summary = chatBot.memory.moving_summary_buffer
+  
+  try:
+    database.save_convo(summary)
+  except Exception as e:
+    print(e)
+  
+  # user = None
+  # chatBot = None
