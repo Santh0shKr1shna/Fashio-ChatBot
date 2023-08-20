@@ -11,32 +11,27 @@ class DataBase (object):
     self.cur = self.con.cursor()
     print("LOG: Cursor set")
     
-  def login(self):
-    if not self.user:
-      # invoke login template
-      uname = input("Enter User name: ")
-      pwd = input("Enter password: ")
-  
-      res = None
-      try:
-        self.cur.execute(f"SELECT pwd FROM users WHERE username = '{uname}'")
-        res = self.cur.fetchone()
-      
-      except sqlite3.Error as error:
-        print("Error: ", error)
-        
-      if not res:
-        print("Username does not exist! Please sign up")
-        return
-      
-      if pwd.strip() != res[0]:
-        print("Password does not match! Retry")
-        return
-      
-      self.user = uname
-      print("User signed in")
-      
-    else: return
+  def login(self, uname, pwd):
+    res = None
+    try:
+      self.cur.execute(f"SELECT pwd FROM users WHERE username = '{uname}'")
+      res = self.cur.fetchone()
+    
+    except sqlite3.Error as error:
+      return error
+    
+    if not res:
+      print("Username does not exist! Please sign up")
+      return {"message": False}
+    
+    if pwd.strip() != res[0]:
+      print("Password does not match! Retry")
+      return {"message": False}
+    
+    self.user = uname
+    print("User signed in")
+    return {"message": True}
+    
   
   def signup(self) -> int:
     uname = input("Enter User name: ")
@@ -92,7 +87,6 @@ class DataBase (object):
     return 1
     
 if __name__ == "__main__":
-  pass
-  # db = DataBase()
-  # db.login()
-  # print(db.save_convo('new test save'))
+  db = DataBase()
+  db.login()
+  print(db.save_convo('new test save'))
