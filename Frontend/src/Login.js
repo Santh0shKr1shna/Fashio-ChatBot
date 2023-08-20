@@ -8,9 +8,18 @@ const Login = () => {
     const [pass, setPass] = useState("");
 
     const handleSubmit = async(req,res) => {
-        await axios.post("http://127.0.0.1:8000/login",
-        JSON.stringify({ email, pass }))
-        .then(res => { console.log(res) })
+        const data={
+            uname: email,
+            pwd: pass
+        }
+        await axios.post("http://127.0.0.1:8000/login", data)
+        .then(res => { 
+            console.log(res) 
+            localStorage.setItem('uname', email)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
     }
 
     return (
