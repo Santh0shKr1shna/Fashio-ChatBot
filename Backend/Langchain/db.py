@@ -11,14 +11,8 @@ class DataBase(object):
     print("LOG: Database connected")
     self.cur = self.con.cursor()
     print("LOG: Cursor set")
-  
-  def login(self, uname='', pwd=''):
-    if not self.user:
-      # invoke login template
-      if uname == '':
-        uname = input("Enter User name: ")
-        pwd = input("Enter password: ")
-      
+    
+  def login(self, uname, pwd):
       res = None
       try:
         self.cur.execute(f"SELECT pwd FROM users WHERE username = '{uname}'")
@@ -38,8 +32,7 @@ class DataBase(object):
       
       self.user = uname
       print("User signed in")
-    
-    return 1
+      return 1
   
   def signup(self, uname='', pwd='') -> int:
     if uname == '':
@@ -94,7 +87,6 @@ class DataBase(object):
 
 
 if __name__ == "__main__":
-  pass
-  # db = DataBase()
-  # db.login()
-  # print(db.save_convo('new test save'))
+  db = DataBase()
+  db.login()
+  print(db.save_convo('new test save'))

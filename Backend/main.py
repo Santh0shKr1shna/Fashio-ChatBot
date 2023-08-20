@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from fastapi import FastAPI, Request, UploadFile, File
+from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 import cv2
 import subprocess
 import os
@@ -25,10 +25,18 @@ class ImageData(BaseModel):
 
 
 @app.post('/login')
-def index():
+def index(uname, pwd):
+    if not uname and not pwd:
+        raise HTTPException(status_code=400, detail="Empty data fields")
     database=db.DataBase()
-    database.printRandom("Is this working")
-    return {"message" : "works"}
+    try:
+        check=database.login(uname, pwd)
+        if(check):
+            return {"message": "Logged in successfully"}
+        else:
+            raise HTTPException(status_code=400, detail="Check details!")
+    except:
+        raise HTTPException(status_code=500, detail="Server error")
 
 @app.get("/")
 def index():
