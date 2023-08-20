@@ -7,7 +7,7 @@ class DataBase(object):
   
   def __init__(self):
     db_path = "C:\sqlite\chatbot.db"
-    self.con = sqlite3.connect(db_path)
+    self.con = sqlite3.connect(db_path, check_same_thread=False)
     print("LOG: Database connected")
     self.cur = self.con.cursor()
     print("LOG: Cursor set")
@@ -34,13 +34,21 @@ class DataBase(object):
       print("User signed in")
       return 1
   
-  def signup(self, uname='', pwd='') -> int:
-    if uname == '':
-      uname = input("Enter User name: ")
-      pwd = input("Enter password: ")
-    
+  def checkUser(self, uname):
     try:
-      self.cur.execute(f"INSERT INTO users VLAUES('{uname}', '{pwd}');")
+      self.cur.execute(f"SELECT * FROM users where username='{uname}';")
+      res=self.cur.fetchone()
+      if res:
+        print("User already exists!")
+        return 2
+    except sqlite3.Error as e:
+      print("Error while checking user: ", e)
+      return 0
+    return 1
+
+  def signup(self, uname, pwd) -> int:
+    try:
+      self.cur.execute(f"INSERT INTO users VALUES('{uname}', '{pwd}');")
       self.con.commit()
       
       self.cur.execute(f"INSERT INTO prev_convos VALUES('{uname}', '');")
@@ -75,6 +83,7 @@ class DataBase(object):
       return 0
     
     try:
+      print("Hola")
       self.cur.execute(f"UPDATE prev_convos SET convo_summary = '{new_convo}' WHERE username = '{self.user}'")
       self.con.commit()
       print("LOG::Data updated in prev_convos")

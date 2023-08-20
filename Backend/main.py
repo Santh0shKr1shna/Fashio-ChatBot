@@ -1,5 +1,4 @@
 import json
-
 import matplotlib.pyplot as plt
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -81,12 +80,23 @@ async def index(data: dict):
         raise HTTPException(status_code=500, detail="Server error")
 
 @app.post("/signup")
-def index(data: SurveyData):
-    uname = data.name
-    pwd = data.pwd
+def index(data: dict):
+    print(data)
+    uname = data.get('name')
+    pwd = data.get('pwd')
     if not uname and not pwd:
         raise HTTPException(status_code=400, detail="Empty data fields")
     
+    #check if user already exists
+    try:
+        check = database.checkUser(uname)
+        print(check)
+        if check==2:
+            raise HTTPException(status_code=400, detail="User already exists!")
+    except:
+        raise HTTPException(status_code=500, detail="Server Error")
+    
+    #if not signup
     try:
         check = database.signup(uname, pwd)
         if not check:
@@ -95,14 +105,14 @@ def index(data: SurveyData):
         raise HTTPException(status_code=500, detail="Server Error")
     
     details = {}
-    details['name'] = data.name
-    details['age'] = data.age
-    details['gender'] = data.gender
-    details['region'] = data.address
-    details['likes'] = data.likes
-    details['dislikes'] = data.dislikes
-    details['favourite_colour'] = data.colors
-    details['favourite_dress'] = data.favourite_dress
+    details['name'] = data.get('name')
+    details['age'] = data.get('age')
+    details['gender'] = data.get('gender')
+    details['region'] = data.get('address')
+    details['likes'] = data.get('likes')
+    details['dislikes'] = data.get('dislikes')
+    details['favourite_colour'] = data.get('colors')
+    details['favourite_dress'] = data.get('favourite_dress')
     
     try:
         res = database.save_convo(str(details))
