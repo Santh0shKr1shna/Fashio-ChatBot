@@ -156,7 +156,7 @@ class Chat(object):
     return res.get('text')
   
   def summarize(self, text, token_limit) -> str:
-    summrzr = OpenAI()
+    summrzr = OpenAI(temperature=0.5)
     
     return summrzr(f"Summarize the following paragraph within {token_limit} tokens"
                    f"without losing details and the integrity."
@@ -165,11 +165,3 @@ class Chat(object):
 
 if __name__ == "__main__":
   pass
-  # chat = Chat(characteristics="""
-  #     Santhosh, aged 20, from India, likes subtle fashion, light themed clothes, cool outfits with minimal accessories. His favourite colours are cream, beige & blue and his favourite fashion attire is sweatshirts and cotton pants.
-  #     """)
-  # conv = chat.convo_with_summarize()
-  #
-  # for _ in range(5):
-  #   res = conv.predict(input=input("Enter prompt: "))
-  #   print(res)
