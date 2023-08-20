@@ -1,1 +1,3 @@
 *.pth
+
+./Frontend/node_modules/
