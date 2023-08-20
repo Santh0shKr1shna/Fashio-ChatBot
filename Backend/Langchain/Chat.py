@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-from Scrapper import WebScrapper
+from Langchain.Scrapper import WebScrapper
 
 from langchain import LLMChain, PromptTemplate
 from langchain.prompts import (
