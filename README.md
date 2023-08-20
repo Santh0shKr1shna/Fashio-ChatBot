@@ -1,4 +1,4 @@
-# Fashion-ChatBot : Flipkart GRiD 5.0 Software Development Track
+# Fashion-ChatBot: Flipkart GRiD 5.0 Software Development Track
 Submission made by Santhosh Krishna S, Sairam R and Shershon A J
 
 ## Problem Statement
@@ -10,5 +10,8 @@ A conversational chatbot built using GenAI to help with your fashion needs.
 ## Tech Stack
 
 ## Modules
+* **Chatbot using LLM**
+* **Trending sites scrapping**
+* **Virtual Try-On**
 
 
