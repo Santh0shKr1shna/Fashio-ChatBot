@@ -2,6 +2,7 @@ import json
 
 import matplotlib.pyplot as plt
 from fastapi import FastAPI, Request, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import cv2
 import subprocess
 import os
@@ -17,6 +18,19 @@ VTON_IMG_UPLOAD_DIR = "./Virtual_TON"
 #FastAPI
 app=FastAPI()
 
+
+# Configure CORS settings
+origins = [
+    "http://localhost:3000",  # Replace with your React app's URL
+    "https://your-react-app-domain.com"  # Add more origins if needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 #image holders
 class ImageData(BaseModel):
     image1: str
@@ -51,7 +65,9 @@ database = db.DataBase()
 user = None
 
 @app.post('/login')
-def index(uname, pwd):
+async def index(data: dict):
+    uname= data.get('uname')
+    pwd=data.get('pwd')
     if not uname and not pwd:
         raise HTTPException(status_code=400, detail="Empty data fields")
 
