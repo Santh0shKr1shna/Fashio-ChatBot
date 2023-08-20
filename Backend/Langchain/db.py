@@ -12,7 +12,7 @@ class DataBase(object):
     self.cur = self.con.cursor()
     print("LOG: Cursor set")
     
-  def login(self, uname, pwd):
+  def login(self, uname, pwd) -> int:
       res = None
       try:
         self.cur.execute(f"SELECT pwd FROM users WHERE username = '{uname}'")
@@ -87,6 +87,7 @@ class DataBase(object):
 
 
 if __name__ == "__main__":
-  db = DataBase()
-  db.login()
-  print(db.save_convo('new test save'))
+  pass
+  # db = DataBase()
+  # db.login()
+  # print(db.save_convo('new test save'))
